@@ -61,19 +61,21 @@ class camera {
 
             hit_record rec;
 
-            if (world.hit(r, interval(0.001, infinity), rec)) {
-                ray scattered;
-                color attenuation;
+            //If the ray hits nothing, it returns the background color
+            if (!world.hit(r, interval(0.001, infinity), rec)) 
+                return background;
 
-                if (rec.mat->scatter(r, rec, attenuation, scattered))
-                    return attenuation * ray_color(scattered, depth - 1, world);
-                return color(0, 0, 0);
-            }
+            ray scattered;
+            color attenuation;
+            color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
 
-            vec3 unit_direction = unit_vector(r.direction());
-            auto a = 0.5 * (unit_direction.y() + 1.0);
-            return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
-                }
+            if (!rec.mat->scatter(r, rec, attenuation, scattered))
+                return color_from_emission;
+            
+            color color_from_scatter = attenuation * ray_color(scattered, depth - 1, world);
+
+            return color_from_emission + color_from_scatter;
+        }
 
         ray get_ray(int i, int j) {
             // Construct a camera ray originating from the defocus disk and directed at a randomly sampled point around the pixel location i, j.
@@ -104,6 +106,7 @@ class camera {
             int image_width = 400; // number of pixels of width
             int samples_per_pixel = 10; //count of random samples for each pixel
             int max_depth = 10; // limits ray bounces in scene
+            color background;
 
             double vert_fov = 90; //vertical field of view in degrees 
             point3 lookfrom = point3(0, 0, 0); // Point camera is looking from

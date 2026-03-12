@@ -9,6 +9,7 @@
 #include "aabb.h"
 #include "bvh.h"
 #include "texture.h"
+#include "ray.h"
 
 
 hittable_list bouncing_spheres() {
@@ -81,6 +82,7 @@ void eazy_cam( hittable_list& world) {
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+    cam.background = color(0.7, 0.8, 1.0);
 
     cam.vert_fov = 20;
 
@@ -107,6 +109,7 @@ hittable_list earth() {
     cam.image_width       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
+    cam.background = color(0.7, 0.8, 1.0);
 
     cam.vert_fov     = 20;
     cam.lookfrom = point3(0,0,12);
@@ -133,6 +136,7 @@ hittable_list perlin_spheres() {
     cam.image_width       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
+    cam.background = color(0.7, 0.8, 1.0);
 
     cam.vert_fov = 20;
     cam.lookfrom = point3(13,2,3);
@@ -168,6 +172,7 @@ hittable_list quads() {
     cam.image_width       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
+    cam.background = color(0.7, 0.8, 1.0);
 
     cam.vert_fov = 80;
     cam.lookfrom = point3(0,0,9);
@@ -187,6 +192,7 @@ void hard_cam( hittable_list& world) {
     cam.image_width = 1000;
     cam.samples_per_pixel = 500;
     cam.max_depth = 150;
+    cam.background = color(0.7, 0.8, 1.0);
 
     cam.vert_fov = 30;
 
@@ -201,6 +207,35 @@ void hard_cam( hittable_list& world) {
     cam.render(world);
 }
 
+hittable_list simple_light() {
+    hittable_list world;
+
+    auto pertext = make_shared<noise_texture>(4);
+    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(pertext)));
+    world.add(make_shared<sphere>(point3(0,2,0), 2, make_shared<lambertian>(pertext)));
+
+    auto difflight = make_shared<diffuse_light>(color(4,4,4));
+    world.add(make_shared<quad>(point3(3,1,-2), vec3(2,0,0), vec3(0,2,0), difflight));
+
+    camera cam;
+
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth         = 50;
+    cam.background        = color(0,0,0);
+
+    cam.vert_fov = 20;
+    cam.lookfrom = point3(26,3,6);
+    cam.lookat   = point3(0,2,0);
+    cam.vup      = vec3(0,1,0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world);
+    return world;
+}
+
 int main(int argc, char* argv[]) {
     std::string switch_case(argv[1]);
     int cond = std::stoi(switch_case);
@@ -210,7 +245,8 @@ int main(int argc, char* argv[]) {
         case 2: eazy_cam(checkered_spheres()); break;
         case 3: earth(); break;
         case 4: perlin_spheres(); break;
-        case 5:quads(); break;
+        case 5: quads(); break;
+        case 6: simple_light(); break;
     }
 
     // if (strcmp(argv[1], "1") == 0) {
