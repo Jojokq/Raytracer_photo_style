@@ -1,6 +1,4 @@
-#ifndef VEC3_H
-#define VEC3_H
-
+#pragma once
 
 class vec3
 {
@@ -144,7 +142,3 @@ inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) { // e
     vec3 r_out_parallel = -std::sqrt(std::fabs(1.0 - r_out_perpendicular.lenght_squared())) * n;
     return r_out_parallel + r_out_perpendicular;
 }
-
-
-
-#endif

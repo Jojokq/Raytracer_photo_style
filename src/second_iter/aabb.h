@@ -6,6 +6,14 @@
 #include "ray.h"
 
 class aabb {
+    private:
+        double delta = 0.0001; 
+        //Adjusts the AABB so that no side is narrower than delta
+        void pad_to_minimums() {
+            if (x.size() < delta) x = x.expand(delta);
+            if (y.size() < delta) y = y.expand(delta);
+            if (z.size() < delta) z = z.expand(delta);
+        }
     public:
         interval x;
         interval y;
@@ -14,13 +22,17 @@ class aabb {
         aabb() {} //the default aabb is empty since intervals are empty by default
 
         aabb(const interval& x, const interval& y, const interval& z)
-            : x(x), y(y), z(z) {}
+            : x(x), y(y), z(z) {
+                pad_to_minimums();
+            }
         
         aabb(const point3& a, const point3& b) {
         //treats a & b as extrema for the bbox so we don't need to explicitly denote max/min
         x = (a[0] < b[0]) ? interval(a[0], b[0]) : interval(b[0], a[0]);
         y = (a[1] < b[1]) ? interval(a[1], b[1]) : interval(b[1], a[1]);
         z = (a[2] < b[2]) ? interval(a[2], b[2]) : interval(b[2], a[2]);
+
+        pad_to_minimums();
         }
 
         aabb(const aabb& box0, const aabb& box1)

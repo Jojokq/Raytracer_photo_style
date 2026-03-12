@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "quad.h"
 #include "material.h"
 #include "aabb.h"
 #include "bvh.h"

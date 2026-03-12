@@ -1,5 +1,4 @@
-#ifndef COLOR_H
-#define COLOR_H
+#pragma once
 
 #include "interval.h"
 #include "vec3.h"
@@ -56,5 +55,3 @@ color_char write_color_ret(const color& pixel_color) {
 
     return color_char{(unsigned char)rbyte, (unsigned char)gbyte, (unsigned char)bbyte};
 }
-
-#endif
