@@ -118,7 +118,7 @@ class camera {
 
             initialize();
 
-            std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+            //std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
             std::vector<unsigned char> image_data;
             color_char temp_res;
