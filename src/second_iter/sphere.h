@@ -78,6 +78,12 @@ class sphere: public hittable {
 
         aabb bounding_box() const override {return bbox;}
 
+        void translate (const vec3& direction) override {
+            ray new_center(center.origin() + direction, center.direction());
+            center = new_center;
+            bbox.translate(direction);
+        }
+
 };
 
 #endif

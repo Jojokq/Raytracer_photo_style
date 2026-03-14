@@ -82,6 +82,12 @@ class aabb {
                 return y.size() > z.size() ? 1 : 2;
         }
 
+        void translate(const vec3& direction) {
+            x = interval(x.min + direction.x(), x.max + direction.x());
+            y = interval(y.min + direction.y(), y.max + direction.y());
+            z = interval(z.min + direction.z(), z.max + direction.z());
+        }
+
         static const aabb empty, universe;
 };
 

@@ -1,5 +1,4 @@
-#ifndef BVH_H
-#define BVH_H
+#pragma once
 
 #include "aabb.h"
 #include "hittable.h"
@@ -47,6 +46,7 @@ class bvh_node : public hittable {
             auto comparator = (axis == 0) ? box_x_compare
                             : (axis == 1) ? box_y_compare
                                           : box_z_compare;
+                                          
             size_t object_span = end - start;
 
             if (object_span == 1) {
@@ -73,6 +73,14 @@ class bvh_node : public hittable {
         }
 
         aabb bounding_box() const override { return bbox; } 
-};
 
-#endif
+        void translate(const vec3& direction) override {
+            if (left == right) {
+                left->translate(direction);
+                bbox.translate(direction);
+                return;
+            }
+            left->translate(direction);
+            right->translate(direction);
+        }
+};

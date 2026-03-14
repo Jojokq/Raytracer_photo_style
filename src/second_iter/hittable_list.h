@@ -38,6 +38,12 @@ class hittable_list : public hittable {
         }
 
         aabb bounding_box() const override {return bbox;}
+
+        void translate(const vec3& direction) override {
+            for (auto& object: objects) {
+                object->translate(direction);
+            }
+        }
 };
 
 #endif

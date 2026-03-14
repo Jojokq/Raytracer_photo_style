@@ -78,6 +78,12 @@ class quad: public hittable {
             rec.v = b;
             return true;
         }
+
+        virtual void translate(const vec3& direction) {
+            Q += direction;
+            set_bounding_box();
+            D = dot(normal, Q);
+        }
 };
 
 inline shared_ptr<hittable_list> box(const point3& a, const point3& b, shared_ptr<material> mat) {
@@ -102,3 +108,15 @@ inline shared_ptr<hittable_list> box(const point3& a, const point3& b, shared_pt
 
     return sides;
 }
+//Probably should rewrite to make it void
+inline shared_ptr<hittable_list> translated_box(shared_ptr<hittable_list>& box, const vec3& direction) {
+    
+    for (const auto& side: box->objects) {
+        side->translate(direction);
+    }
+    return box;
+}
+
+// inline shared_ptr<hittable_list> rotated_box(shared_ptr<hittable_list> box, int axis = 3, double theta) { // axis: 1=x, 2=y, 3=z; theta in degrees
+    
+// }
